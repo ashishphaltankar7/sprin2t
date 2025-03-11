@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.*, javax.servlet.http.*" %>
+<%@ page import="java.util.*, jakarta.servlet.http.*" %>
 <%@ include file="navbar.jsp" %>
 
 <!DOCTYPE html>

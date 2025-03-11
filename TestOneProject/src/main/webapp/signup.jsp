@@ -1,13 +1,14 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up | EazyWay Shop</title>
+    <title>Sign Up | Eazy Shop</title>
 
-    <!-- Bootstrap & FontAwesome -->
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
     <style>
         body {
@@ -17,7 +18,6 @@
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            color: black;
         }
 
         .signup-container {
@@ -33,80 +33,58 @@
 
         .form-control {
             border-radius: 10px;
-            padding-left: 15px;
-            border: 1px solid rgba(0, 0, 0, 0.4);
-            background: rgba(255, 255, 255, 0.7);
-            color: black;
         }
 
-        .form-control:focus {
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            border-color: rgba(0, 0, 0, 0.8);
-            background: white;
-        }
-
-        .toggle-password {
-            background: none;
-            border: none;
-            cursor: pointer;
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: black;
-            font-size: 1.5em;
-        }
-
-        .btn-custom {
-            background-color: #FF66B3;
-            color: black;
-            border-radius: 10px;
-            font-weight: bold;
-            opacity: 0.6;
-            cursor: not-allowed;
-            border: none;
-            transition: 0.3s;
-        }
-
-        .btn-custom.enabled {
-            opacity: 1;
-            cursor: pointer;
-        }
-
-        .password-match {
+        .error-message {
             color: red;
             font-size: 0.9em;
             display: none;
+            text-align: left;
+            margin-top: 5px;
+        }
+
+        .quote {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            font-style: italic;
+            color: #444;
         }
     </style>
 </head>
 <body>
 
-    <div class="signup-container">
+    <div class="signup-container"><
+       
         <h2 class="mb-3">Sign Up</h2>
-        <form action="register.jsp" method="post">
+        <form method="post" id="signupForm">
             <div class="mb-3">
-                <input type="text" class="form-control" id="name" name="name" placeholder="Full Name" required>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Full Name">
+                <span class="error-message" id="nameError">Full name must be 3-50 characters.</span>
             </div>
 
             <div class="mb-3">
-                <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+                <span class="error-message" id="emailError">Enter a valid email.</span>
             </div>
 
             <div class="mb-3">
-                <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone Number" required>
+                <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone Number">
+                <span class="error-message" id="phoneError">Enter a valid 10-digit phone number.</span>
             </div>
 
             <div class="mb-3">
-                <input type="text" class="form-control" id="address" name="address" placeholder="Address" required>
+                <input type="text" class="form-control" id="address" name="address" placeholder="Address">
+                <span class="error-message" id="addressError">Address cannot be empty.</span>
             </div>
 
             <div class="mb-3">
-                <input type="text" class="form-control" id="pincode" name="pincode" placeholder="Pincode" required>
+                <input type="text" class="form-control" id="pincode" name="pincode" placeholder="Pincode">
+                <span class="error-message" id="pincodeError">Enter a valid 6-digit pincode.</span>
             </div>
 
             <div class="mb-3">
-                <select class="form-control" id="state" name="state" required>
+                <select class="form-control" id="state" name="state">
                     <option value="" disabled selected>Select State</option>
                     <option>Andhra Pradesh</option>
                     <option>Delhi</option>
@@ -116,94 +94,87 @@
                     <option>Uttar Pradesh</option>
                     <option>West Bengal</option>
                 </select>
+                <span class="error-message" id="stateError">Select a state.</span>
             </div>
 
             <div class="mb-3">
-                <select class="form-control" id="city" name="city" required>
-                    <option value="" disabled selected>Select City</option>
-                </select>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                <span class="error-message" id="passwordError">Password must have at least 8 characters, an uppercase letter, a number, and a special character.</span>
             </div>
 
             <div class="mb-3">
-                <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password">
+                <span class="error-message" id="confirmPasswordError">Passwords do not match.</span>
             </div>
 
-            <div class="mb-3 position-relative">
-                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required>
-                <button type="button" class="toggle-password" onclick="togglePasswordVisibility()">
-                    <i class="fa fa-eye"></i>
-                </button>
-            </div>
-
-            <p id="passwordMatchMessage" class="password-match">Passwords do not match!</p>
-
-            <button type="submit" class="btn btn-custom w-100" id="signupBtn" disabled>Sign Up</button>
+            <button type="submit" class="btn btn-primary w-100">Sign Up</button>
         </form>
     </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            let inputs = document.querySelectorAll(".form-control");
-            let passwordInput = document.getElementById("password");
-            let confirmPasswordInput = document.getElementById("confirmPassword");
-            let signupBtn = document.getElementById("signupBtn");
-            let passwordMatchMessage = document.getElementById("passwordMatchMessage");
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById("signupForm");
 
-            function validateForm() {
-                let isValid = [...inputs].every(input => input.value.trim() !== "") &&
-                    passwordInput.value === confirmPasswordInput.value;
-
-                if (isValid) {
-                    signupBtn.removeAttribute("disabled");
-                    signupBtn.classList.add("enabled");
-                    passwordMatchMessage.style.display = "none";
+            function validateField(input, regex, errorMessageId) {
+                let errorSpan = document.getElementById(errorMessageId);
+                if (regex.test(input.value.trim())) {
+                    errorSpan.style.display = "none";
                 } else {
-                    signupBtn.setAttribute("disabled", "true");
-                    signupBtn.classList.remove("enabled");
-                    if (passwordInput.value !== confirmPasswordInput.value) {
-                        passwordMatchMessage.style.display = "block";
-                    } else {
-                        passwordMatchMessage.style.display = "none";
-                    }
+                    errorSpan.style.display = "block";
                 }
             }
 
-            function togglePasswordVisibility() {
-                let toggleButton = document.querySelector(".toggle-password i");
-                if (confirmPasswordInput.type === "password") {
-                    confirmPasswordInput.type = "text";
-                    toggleButton.classList.replace("fa-eye", "fa-eye-slash");
+            function validatePasswordMatch() {
+                let password = document.getElementById("password").value.trim();
+                let confirmPassword = document.getElementById("confirmPassword").value.trim();
+                let errorSpan = document.getElementById("confirmPasswordError");
+
+                if (password !== confirmPassword || confirmPassword === "") {
+                    errorSpan.style.display = "block";
                 } else {
-                    confirmPasswordInput.type = "password";
-                    toggleButton.classList.replace("fa-eye-slash", "fa-eye");
+                    errorSpan.style.display = "none";
                 }
             }
 
-            document.getElementById("state").addEventListener("change", function() {
-                let cities = {
-                    "Maharashtra": ["Mumbai", "Pune", "Nagpur"],
-                    "Karnataka": ["Bangalore", "Mysore"],
-                    "Tamil Nadu": ["Chennai", "Coimbatore"],
-                    "Delhi": ["New Delhi"],
-                    "Uttar Pradesh": ["Lucknow", "Noida"],
-                    "West Bengal": ["Kolkata"]
-                };
-                let cityInput = document.getElementById("city");
-                cityInput.innerHTML = '<option value="" disabled selected>Select City</option>';
-                if (cities[this.value]) {
-                    cities[this.value].forEach(city => {
-                        let option = document.createElement("option");
-                        option.value = city;
-                        option.textContent = city;
-                        cityInput.appendChild(option);
-                    });
+            document.getElementById("name").addEventListener("input", function () {
+                validateField(this, /^[A-Za-z ]{3,50}$/, "nameError");
+            });
+
+            document.getElementById("email").addEventListener("input", function () {
+                validateField(this, /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "emailError");
+            });
+
+            document.getElementById("phone").addEventListener("input", function () {
+                validateField(this, /^[6-9]\d{9}$/, "phoneError");
+            });
+
+            document.getElementById("pincode").addEventListener("input", function () {
+                validateField(this, /^\d{6}$/, "pincodeError");
+            });
+
+            document.getElementById("password").addEventListener("input", function () {
+                validateField(this, /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/, "passwordError");
+            });
+
+            document.getElementById("confirmPassword").addEventListener("input", validatePasswordMatch);
+
+            document.getElementById("state").addEventListener("change", function () {
+                let errorSpan = document.getElementById("stateError");
+                if (this.value !== "") {
+                    errorSpan.style.display = "none";
+                } else {
+                    errorSpan.style.display = "block";
                 }
             });
 
-            inputs.forEach(input => input.addEventListener("input", validateForm));
+            form.addEventListener("submit", function (event) {
+                let errorMessages = document.querySelectorAll(".error-message");
+                let hasError = Array.from(errorMessages).some(msg => msg.style.display === "block");
+
+                if (hasError) {
+                    event.preventDefault();
+                }
+            });
         });
     </script>
 

@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.*, javax.servlet.http.*" %>
+<%@ page import="java.util.*, jakarta.servlet.http.*" %>
 <%@ include file="navbar.jsp" %>
 
 <!DOCTYPE html>
@@ -15,9 +15,10 @@
 
     <style>
         body {
-            background: #F8F9FA;
+            background: #FBFFE4;
             color: black !important;
         }
+
         .container {
             margin-top: 30px;
             background: white;
@@ -25,53 +26,112 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        h2, h4, label, th, td {
-            color: black !important;
+
+        .table {
+            border: 2px solid #A3D1C6;
         }
+
         .table th, .table td {
             vertical-align: middle;
             text-align: center;
+            background: #B3D8A8;
+            color: black !important;
         }
-        .remove-btn {
-            background: #D72638;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-            border-radius: 5px;
+
+        h2, h4, label, th, td, input, textarea, button, select, p, span, div, a {
+            color: black !important;
         }
+
+        .form-control {
+            border: 1px solid #A3D1C6;
+            background: #FBFFE4;
+        }
+
         .btn-success {
-            background: #28A745;
+            background: #3D8D7A;
             border: none;
-            color: white;
+            color: white !important;
             width: 100%;
             font-size: 18px;
             padding: 10px;
             border-radius: 5px;
         }
+
         .btn-success:hover {
-            background: #218838;
+            background: #2E6E5E;
         }
-        #orderSuccess {
+
+        /* Navbar Styling */
+        .navbar {
+            background: #B3D8A8 !important;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar .navbar-brand, .navbar-nav .nav-link {
+            color: #3D8D7A !important;
+            font-weight: bold;
+        }
+
+        .navbar .navbar-nav .nav-link:hover {
+            color: #2E6E5E !important;
+        }
+
+        /* Order Confirmation Pop-up */
+        #orderPopup {
             display: none;
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: black;
-            color: white;
+            background: white;
+            color: black !important;
             padding: 20px;
-            border-radius: 5px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
             text-align: center;
             z-index: 1000;
             font-size: 20px;
             font-weight: bold;
+            width: 300px;
+        }
+
+        #orderPopup button {
+            margin-top: 15px;
+            background: #3D8D7A;
+            border: none;
+            padding: 8px 15px;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #orderPopup button:hover {
+            background: #2E6E5E;
+        }
+
+        /* Overlay Background */
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 999;
         }
     </style>
 </head>
 <body>
 
-<div id="orderSuccess">🎉 Order placed successfully! Downloading receipt...</div>
+<!-- Order Confirmation Pop-up -->
+<div id="overlay"></div>
+<div id="orderPopup">
+    🎉 Order Confirmed!  
+    <br> Your order has been placed successfully.
+    <br>
+    <button onclick="closePopup()">OK</button>
+</div>
 
 <div class="container">
     <h2>Checkout</h2>
@@ -103,11 +163,11 @@
             <form id="checkoutForm">
                 <div class="mb-2">
                     <label>Email address</label>
-                    <input type="email" class="form-control" id="email" value="" required>
+                    <input type="email" class="form-control" id="email" required>
                 </div>
                 <div class="mb-2">
                     <label>Your name</label>
-                    <input type="text" class="form-control" id="name" value="" required>
+                    <input type="text" class="form-control" id="name" required>
                 </div>
                 <div class="mb-2">
                     <label>Shipping Address</label>
@@ -116,24 +176,24 @@
                 <div class="row">
                     <div class="col-md-4 mb-2">
                         <label>State</label>
-                        <input type="text" class="form-control" id="state" value="" required>
+                        <input type="text" class="form-control" id="state" required>
                     </div>
                     <div class="col-md-4 mb-2">
                         <label>City</label>
-                        <input type="text" class="form-control" id="city" value="" required>
+                        <input type="text" class="form-control" id="city" required>
                     </div>
                     <div class="col-md-4 mb-2">
                         <label>Pincode</label>
-                        <input type="text" class="form-control" id="pincode" value="" required>
+                        <input type="text" class="form-control" id="pincode" required>
                     </div>
                 </div>
                 <div class="mb-2">
                     <label>Contact Number</label>
-                    <input type="tel" class="form-control" id="contact" value="" required>
+                    <input type="tel" class="form-control" id="contact" required>
                 </div>
                 <div class="mb-2">
                     <label>Payment Method</label>
-                    <input type="text" class="form-control" value="Cash on Delivery" readonly>
+                    <input type="text" class="form-control" value="Cash on Delivery" readonly disabled>
                 </div>
                 <button type="button" class="btn btn-success" onclick="placeOrder()">Order now</button>
             </form>
@@ -170,36 +230,14 @@
         document.getElementById("totalPrice").innerText = total.toFixed(2);
     }
 
-    function removeItem(index) {
-        cartItems.splice(index, 1);
-        loadCart();
-    }
-
     function placeOrder() {
-        document.getElementById("orderSuccess").style.display = "block";
-        setTimeout(() => {
-            generateReceipt();
-            document.getElementById("orderSuccess").style.display = "none";
-        }, 2000);
+        document.getElementById("overlay").style.display = "block";
+        document.getElementById("orderPopup").style.display = "block";
     }
 
-    function generateReceipt() {
-        let userDetails = `
-            Name: ${document.getElementById("name").value}
-            Email: ${document.getElementById("email").value}
-            Address: ${document.getElementById("address").value}, ${document.getElementById("city").value}, ${document.getElementById("state").value}, ${document.getElementById("pincode").value}
-            Contact: ${document.getElementById("contact").value}
-            Payment: Cash on Delivery
-        `;
-
-        let productDetails = "Products Ordered:\n" + cartItems.map(item => `${item.name} - $${item.price} x ${item.quantity} = $${item.price * item.quantity}`).join("\n");
-
-        let receiptContent = `Order Receipt\n\n${userDetails}\n\n${productDetails}\n\nTotal: $${document.getElementById("totalPrice").innerText}`;
-        let blob = new Blob([receiptContent], { type: "text/plain" });
-        let link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = "OrderReceipt.txt";
-        link.click();
+    function closePopup() {
+        document.getElementById("overlay").style.display = "none";
+        document.getElementById("orderPopup").style.display = "none";
     }
 
     window.onload = loadCart;
